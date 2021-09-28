@@ -42,3 +42,4 @@ spec:
   locations: []
   maintenanceWindow: ""
   googleCredentialSecret: "cattle-global-data:cc-abcde"
+  dataplaneV2Enabled: true

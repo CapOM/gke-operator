@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	gkev1 "github.com/rancher/gke-operator/pkg/apis/gke.cattle.io/v1"
-	gkeapi "google.golang.org/api/container/v1"
+	gkeapi "google.golang.org/api/container/v1beta1"
 )
 
 // Errors
@@ -97,6 +97,7 @@ func newClusterCreateRequest(config *gkev1.GKEClusterConfig) *gkeapi.CreateClust
 			NodePools:         []*gkeapi.NodePool{},
 			Locations:         config.Spec.Locations,
 			MaintenancePolicy: &gkeapi.MaintenancePolicy{},
+			NetworkConfig: &gkeapi.NetworkConfig{},
 		},
 	}
 
@@ -132,6 +133,10 @@ func newClusterCreateRequest(config *gkev1.GKEClusterConfig) *gkeapi.CreateClust
 			Enabled:    config.Spec.MasterAuthorizedNetworksConfig.Enabled,
 			CidrBlocks: blocks,
 		}
+	}
+
+	if config.Spec.DataplaneV2 != nil {
+		request.Cluster.NetworkConfig.DatapathProvider = "ADVANCED_DATAPATH";
 	}
 
 	if config.Spec.Network != nil {
